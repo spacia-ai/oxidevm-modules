@@ -149,6 +149,57 @@
         "executables": [],
         "commands": []
       }
+    },
+    {
+      "source": "github:spacia-ai/oxidevm-rust",
+      "tier": "official",
+      "featured": false,
+      "title": "Rust",
+      "tagline": "Run Rust programs built for wasm32-wasip1 as Linux processes, with files, native programs and sockets.",
+      "publisher": "Spacia",
+      "icon": "cube",
+      "repository": {
+        "url": "https://github.com/spacia-ai/oxidevm-rust",
+        "description": "OxideVM WebAssembly module: Rust programs (wasm32-wasip1) as Linux processes with the VM's files, native programs and sockets"
+      },
+      "release": {
+        "tag": "v0.1.1",
+        "url": "https://github.com/spacia-ai/oxidevm-rust/releases/tag/v0.1.1",
+        "commit": "96f29c63a4d2fc60c3f44d2ccea4996e52758b41",
+        "id": "bd57631c0b9bb8f0d43f6ca103d01a76106ccc4a2ff6bb6f67024f5d13b0b86a",
+        "publishedAt": "2026-11-04T23:39:10Z"
+      },
+      "manifest": {
+        "id": "oxidevm-rust",
+        "version": "0.1.1",
+        "kind": "command",
+        "commands": [
+          "rust-bridge-demo",
+          "rust-wasi"
+        ],
+        "endpoints": [],
+        "reach": "vm",
+        "browser": [],
+        "license": "Apache-2.0",
+        "upstream": []
+      },
+      "authority": {
+        "host": [
+          "clock",
+          "files.at",
+          "files.sync",
+          "net.vm",
+          "process.info",
+          "process.sync",
+          "random"
+        ],
+        "endpoints": [],
+        "executables": [],
+        "commands": [
+          "rust-bridge-demo",
+          "rust-wasi"
+        ]
+      }
     }
   ]
 }
