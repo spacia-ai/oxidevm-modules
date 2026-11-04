@@ -1,10 +1,10 @@
 # Checks a pull request that changes modules.json. It runs this repository's own validator from the
 # base branch and reads only the pull request's modules.json and file list, so code in a pull request
-# never runs here.
+# never runs here. It runs on every pull request so that branch protection can require it; a pull
+# request that leaves modules.json alone passes at once.
 name: validate
 on:
   pull_request:
-    paths: [modules.json]
 permissions:
   contents: read
   pull-requests: read
@@ -22,6 +22,7 @@ jobs:
       - run: corepack enable
       - run: pnpm install --frozen-lockfile --prod
       - name: Read the pull request's modules.json and changed files
+        id: read
         env:
           GH_TOKEN: ${{ github.token }}
           REPOSITORY: ${{ github.repository }}
@@ -29,10 +30,16 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
           gh api "repos/$REPOSITORY/pulls/$NUMBER/files" --paginate --jq '.[].filename' > "$RUNNER_TEMP/changed-files.txt"
+          if ! grep -qx "modules.json" "$RUNNER_TEMP/changed-files.txt"; then
+            echo "modules.json is unchanged: nothing to validate."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
           git fetch --no-tags --depth=1 origin "pull/$NUMBER/head"
           test "$(git rev-parse FETCH_HEAD)" = "$HEAD_SHA"
           git show FETCH_HEAD:modules.json > "$RUNNER_TEMP/head-modules.json"
       - name: Validate the submission
+        if: steps.read.outputs.skip != 'true'
         env:
           GITHUB_TOKEN: ${{ github.token }}
           AUTHOR: ${{ github.event.pull_request.user.login }}
