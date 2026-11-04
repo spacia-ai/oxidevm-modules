@@ -1,0 +1,43 @@
+# Checks a pull request that changes modules.json. It runs this repository's own validator from the
+# base branch and reads only the pull request's modules.json and file list, so code in a pull request
+# never runs here.
+name: validate
+on:
+  pull_request:
+    paths: [modules.json]
+permissions:
+  contents: read
+  pull-requests: read
+jobs:
+  submission:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile --prod
+      - name: Read the pull request's modules.json and changed files
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPOSITORY: ${{ github.repository }}
+          NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          gh api "repos/$REPOSITORY/pulls/$NUMBER/files" --paginate --jq '.[].filename' > "$RUNNER_TEMP/changed-files.txt"
+          git fetch --no-tags --depth=1 origin "pull/$NUMBER/head"
+          test "$(git rev-parse FETCH_HEAD)" = "$HEAD_SHA"
+          git show FETCH_HEAD:modules.json > "$RUNNER_TEMP/head-modules.json"
+      - name: Validate the submission
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+          MAINTAINER: ${{ contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.pull_request.author_association) }}
+        run: |
+          flags=()
+          if [ "$MAINTAINER" = "true" ]; then flags+=(--maintainer); fi
+          node src/cli.ts validate --head "$RUNNER_TEMP/head-modules.json" --changed-files "$RUNNER_TEMP/changed-files.txt" --author "$AUTHOR" "${flags[@]}"

@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "modules": [
+    {
+      "source": "github:spacia-ai/oxidevm-pyodide",
+      "tier": "official",
+      "featured": true,
+      "title": "Python",
+      "tagline": "Python 3 with pandas and Matplotlib. Just type python3.",
+      "publisher": "Spacia",
+      "icon": "python",
+      "repository": {
+        "url": "https://github.com/spacia-ai/oxidevm-pyodide",
+        "description": "OxideVM WebAssembly module: Python (Pyodide) with pandas and Matplotlib, as a command that shares files and processes with Linux programs"
+      },
+      "release": {
+        "tag": "v0.3.0",
+        "url": "https://github.com/spacia-ai/oxidevm-pyodide/releases/tag/v0.3.0",
+        "commit": "38b1631a895db7a27819f6098d5084eb57bc634e",
+        "id": "ab060d492c40bde3478d73682063881a43d09f86894489df31dd305778d2c99d",
+        "publishedAt": "2026-11-03T23:33:21Z"
+      },
+      "manifest": {
+        "id": "pyodide",
+        "version": "0.3.0",
+        "kind": "command",
+        "commands": [
+          "python",
+          "python3"
+        ],
+        "endpoints": [],
+        "reach": "internet",
+        "browser": [
+          "cross-origin-isolated"
+        ],
+        "license": "Apache-2.0 AND MPL-2.0 AND PSF-2.0 AND BSD-3-Clause AND BSD-2-Clause AND MIT AND MIT-CMU AND 0BSD AND Zlib AND bzip2-1.0.6 AND CC0-1.0 AND OFL-1.1 AND Bitstream-Vera AND LicenseRef-Matplotlib",
+        "upstream": [
+          {
+            "name": "Pyodide",
+            "version": "314.0.7"
+          },
+          {
+            "name": "certifi",
+            "version": "2026.4.22"
+          },
+          {
+            "name": "contourpy",
+            "version": "1.3.3"
+          },
+          {
+            "name": "kiwisolver",
+            "version": "1.5.0"
+          },
+          {
+            "name": "matplotlib",
+            "version": "3.10.8"
+          },
+          {
+            "name": "numpy",
+            "version": "2.4.6"
+          },
+          {
+            "name": "pandas",
+            "version": "3.0.2"
+          },
+          {
+            "name": "pillow",
+            "version": "12.2.0"
+          }
+        ]
+      },
+      "authority": {
+        "host": [
+          "files.async",
+          "files.sync",
+          "net.internet",
+          "process.info",
+          "process.signals",
+          "process.spawn",
+          "sockets.connect"
+        ],
+        "endpoints": [],
+        "executables": [],
+        "commands": [
+          "python",
+          "python3"
+        ]
+      }
+    },
+    {
+      "source": "github:spacia-ai/oxidevm-pglite",
+      "tier": "official",
+      "featured": true,
+      "title": "PostgreSQL",
+      "tagline": "A Postgres 18 database in the workspace. Connect with psql.",
+      "publisher": "Spacia",
+      "icon": "database",
+      "repository": {
+        "url": "https://github.com/spacia-ai/oxidevm-pglite",
+        "description": "OxideVM WebAssembly module: PGlite (PostgreSQL 18) as a workspace service"
+      },
+      "release": {
+        "tag": "v0.2.0",
+        "url": "https://github.com/spacia-ai/oxidevm-pglite/releases/tag/v0.2.0",
+        "commit": "7bcb7c7a57d629f121059c1ce9f1ef7069aaac0b",
+        "id": "59eceb50cf4ca48d9bfd036a0c455ba7b52b428c9f51971cb4df7ea7d7f153d4",
+        "publishedAt": "2026-11-03T23:08:23Z"
+      },
+      "manifest": {
+        "id": "pglite",
+        "version": "0.2.0",
+        "kind": "service",
+        "commands": [],
+        "endpoints": [
+          {
+            "name": "pg",
+            "kind": "tcp",
+            "port": 5432
+          },
+          {
+            "name": "sql",
+            "kind": "unix",
+            "path": "/workspace/_oxidevm/pglite.sock"
+          }
+        ],
+        "reach": "none",
+        "browser": [],
+        "license": "Apache-2.0 AND PostgreSQL AND MIT AND Unicode-3.0 AND BSD-3-Clause AND Apache-2.0 WITH LLVM-exception",
+        "upstream": [
+          {
+            "name": "@electric-sql/pglite",
+            "version": "0.5.14"
+          },
+          {
+            "name": "PostgreSQL (PGlite fork)",
+            "version": "18.6"
+          }
+        ]
+      },
+      "authority": {
+        "host": [
+          "files.sync",
+          "process.info"
+        ],
+        "endpoints": [
+          "tcp:5432",
+          "unix:/workspace/_oxidevm/pglite.sock"
+        ],
+        "executables": [],
+        "commands": []
+      }
+    }
+  ]
+}

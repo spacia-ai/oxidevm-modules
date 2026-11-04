@@ -1,0 +1,50 @@
+# Every night, rebuilds catalog.json from each listed module's latest release and opens (or updates)
+# one pull request with the result. A release that asks for more authority than the listed one, or a
+# module that fails its checks, is marked "review required" in the pull request.
+name: sync
+on:
+  schedule:
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+  pull-requests: write
+concurrency:
+  group: sync
+  cancel-in-progress: false
+jobs:
+  catalog:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: corepack enable
+      - run: pnpm install --frozen-lockfile --prod
+      - id: sync
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node src/cli.ts sync
+      - name: Open or update the sync pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REVIEW: ${{ steps.sync.outputs.review_required }}
+        run: |
+          if git diff --quiet -- catalog.json; then
+            echo "catalog.json is current."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -C sync/catalog
+          git add catalog.json
+          git commit -m "Update the module catalog"
+          git push --force origin sync/catalog
+          title="Update the module catalog"
+          if [ "$REVIEW" = "true" ]; then title="$title (review required)"; fi
+          if gh pr view sync/catalog --json state --jq .state 2>/dev/null | grep -q OPEN; then
+            gh pr edit sync/catalog --title "$title" --body-file sync-summary.md
+          else
+            gh pr create --head sync/catalog --base main --title "$title" --body-file sync-summary.md
+          fi

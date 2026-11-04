@@ -1,0 +1,22 @@
+{
+  "modules": [
+    {
+      "source": "github:spacia-ai/oxidevm-pyodide",
+      "tier": "official",
+      "featured": true,
+      "title": "Python",
+      "tagline": "Python 3 with pandas and Matplotlib. Just type python3.",
+      "publisher": "Spacia",
+      "icon": "python"
+    },
+    {
+      "source": "github:spacia-ai/oxidevm-pglite",
+      "tier": "official",
+      "featured": true,
+      "title": "PostgreSQL",
+      "tagline": "A Postgres 18 database in the workspace. Connect with psql.",
+      "publisher": "Spacia",
+      "icon": "database"
+    }
+  ]
+}

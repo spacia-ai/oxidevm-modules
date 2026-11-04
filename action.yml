@@ -1,0 +1,32 @@
+name: OxideVM module listing check
+description: Checks that a module repository and its release meet the listing rules of spacia-ai/oxidevm-modules.
+inputs:
+  repository:
+    description: The module repository, as owner/repo.
+    default: ${{ github.repository }}
+  tag:
+    description: The release tag to check. Empty checks the latest release.
+    default: ""
+  github-token:
+    description: A token for the GitHub API.
+    default: ${{ github.token }}
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v4
+      with:
+        node-version: 24
+    - shell: bash
+      run: |
+        corepack enable
+        cd "$GITHUB_ACTION_PATH"
+        pnpm install --frozen-lockfile --prod
+    - shell: bash
+      env:
+        REPOSITORY: ${{ inputs.repository }}
+        TAG: ${{ inputs.tag }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+      run: |
+        args=(check "$REPOSITORY")
+        if [ -n "$TAG" ]; then args+=(--tag "$TAG"); fi
+        node "$GITHUB_ACTION_PATH/src/cli.ts" "${args[@]}"

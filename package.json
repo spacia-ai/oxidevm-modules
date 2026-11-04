@@ -1,0 +1,21 @@
+{
+  "name": "oxidevm-modules",
+  "private": true,
+  "license": "Apache-2.0",
+  "type": "module",
+  "engines": { "node": ">=24.2" },
+  "scripts": {
+    "check": "tsc --noEmit",
+    "test": "node --test \"src/**/*.test.ts\"",
+    "sync": "node src/cli.ts sync",
+    "discover": "node src/cli.ts discover",
+    "check-module": "node src/cli.ts check"
+  },
+  "dependencies": {
+    "@oxidevm/sdk": "0.0.12"
+  },
+  "devDependencies": {
+    "@types/node": "24.13.3",
+    "typescript": "6.0.3"
+  }
+}

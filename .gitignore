@@ -1,0 +1,4 @@
+node_modules/
+*.log
+catalog.json.tmp
+sync-summary.md

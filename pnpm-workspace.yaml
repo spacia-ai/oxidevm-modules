@@ -1,0 +1,4 @@
+allowBuilds:
+  esbuild: false
+minimumReleaseAgeExclude:
+  - "@oxidevm/sdk@0.0.12"
