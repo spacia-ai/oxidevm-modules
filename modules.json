@@ -17,6 +17,15 @@
       "tagline": "A Postgres 18 database in the workspace. Connect with psql.",
       "publisher": "Spacia",
       "icon": "database"
+    },
+    {
+      "source": "github:spacia-ai/oxidevm-rust",
+      "tier": "official",
+      "featured": false,
+      "title": "Rust",
+      "tagline": "Run Rust programs built for wasm32-wasip1 as Linux processes, with files, native programs and sockets.",
+      "publisher": "Spacia",
+      "icon": "cube"
     }
   ]
 }
