@@ -1,6 +1,8 @@
 # Every night, rebuilds catalog.json from each listed module's latest release and opens (or updates)
 # one pull request with the result. A release that asks for more authority than the listed one, or a
-# module that fails its checks, is marked "review required" in the pull request.
+# module that fails its checks, is marked "review required" in the pull request. Where the
+# organization does not let workflows open pull requests, it opens (or updates) an issue instead,
+# with a link that creates the pull request from the pushed sync/catalog branch.
 name: sync
 on:
   schedule:
@@ -8,6 +10,7 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+  issues: write
   pull-requests: write
 concurrency:
   group: sync
@@ -45,6 +48,16 @@ jobs:
           if [ "$REVIEW" = "true" ]; then title="$title (review required)"; fi
           if gh pr view sync/catalog --json state --jq .state 2>/dev/null | grep -q OPEN; then
             gh pr edit sync/catalog --title "$title" --body-file sync-summary.md
+            exit 0
+          fi
+          if gh pr create --head sync/catalog --base main --title "$title" --body-file sync-summary.md; then
+            exit 0
+          fi
+          compare="https://github.com/$GITHUB_REPOSITORY/compare/main...sync/catalog?expand=1"
+          { printf 'The sync pushed `sync/catalog`. [Open the pull request](%s).\n\n' "$compare"; cat sync-summary.md; } > issue.md
+          issue=$(gh issue list --state open --search "in:title \"Module catalog update\"" --json number --jq '.[0].number // empty')
+          if [ -n "$issue" ]; then
+            gh issue edit "$issue" --title "Module catalog update" --body-file issue.md
           else
-            gh pr create --head sync/catalog --base main --title "$title" --body-file sync-summary.md
+            gh issue create --title "Module catalog update" --body-file issue.md
           fi
