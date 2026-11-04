@@ -12,7 +12,7 @@
     "check-module": "node src/cli.ts check"
   },
   "dependencies": {
-    "@oxidevm/sdk": "0.0.12"
+    "@oxidevm/sdk": "0.0.14"
   },
   "devDependencies": {
     "@types/node": "24.13.3",
